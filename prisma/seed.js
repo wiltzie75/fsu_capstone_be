@@ -40,7 +40,7 @@ const seed = async () => {
         facultyId: 5
       }
     ];
-    await prisma.departments.createMany({ data: departments });
+    await prisma.department.createMany({ data: departments });
   };
 
   await createDepartments();
