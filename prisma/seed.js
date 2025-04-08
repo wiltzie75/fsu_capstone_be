@@ -33,7 +33,7 @@ const seed = async () => {
         bio: "Dr. Heinz Doofenshmirtz, often called 'Doof' for short, he hates platypuses please do not bring that up, in his classes. He once through a stampler at one of his classmates because they had a platypus shirt on. But he is very kind hearted and couldn't hurt a fly.",
         image: "https://static.wikia.nocookie.net/phineasandferb/images/d/d0/Emperor_Doofenshmirtz_close-up.jpg/revision/latest?cb=20241221184041",
         email: "antiplaty@lu.com",
-        department: "3"
+        department: 3
       },
       {
         name: "prof nailfile",
