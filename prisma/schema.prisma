@@ -19,8 +19,8 @@ model Department {
   description String
   image String
   email String
-  faculty Faculty @relation(fields: [facultyId], references: [id])
-  facultyId Int
+  faculty Faculty[]
+  
 }
 
 model Faculty {
@@ -29,5 +29,6 @@ model Faculty {
   bio String
   image String
   email String
-  department Department[]
+  department Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
 }
