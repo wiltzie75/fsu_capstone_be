@@ -62,8 +62,6 @@ app.delete("/api/departments/:departmentId", async (req, res, next) => {
     }
 });
 
-const prisma = require("./prisma/seed.js");
-
 
 app.get("/api/faculty", async (req, res, next) => {
     try {
