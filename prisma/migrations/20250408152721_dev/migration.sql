@@ -5,7 +5,6 @@ CREATE TABLE "Department" (
     "description" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "facultyId" INTEGER NOT NULL,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );
@@ -17,9 +16,10 @@ CREATE TABLE "Faculty" (
     "bio" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "departmentId" INTEGER NOT NULL,
 
     CONSTRAINT "Faculty_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
-ALTER TABLE "Department" ADD CONSTRAINT "Department_facultyId_fkey" FOREIGN KEY ("facultyId") REFERENCES "Faculty"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Faculty" ADD CONSTRAINT "Faculty_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
