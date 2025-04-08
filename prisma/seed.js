@@ -2,7 +2,6 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient;
 module.exports = prisma;
 
-
 const seed = async () => {
 
   const createFaculty = async () => {
@@ -46,7 +45,7 @@ const seed = async () => {
         name: "Ms Mittens",
         bio: "Meet Ms Mittens, she is kind, loving but with a hint of spice. One of our most loved staff here at LU, always 'treats' everyone with respect",
         image: "https://t3.ftcdn.net/jpg/05/69/31/50/360_F_569315006_ld6pYJD2zvZBr4X5s8BTMsw1t7RhFs8h.jpg",
-        email: "meow@fr_LU.com",
+        email: "meow@lu.com",
         department: 4
       },
       {
@@ -60,26 +59,27 @@ const seed = async () => {
         name: "Mr WickleBusket",
         bio: "Mr WickleBusket sure knows how to have a good time. You'll see him always enjoying himself just around. He does things like smell flowers, cook chicken, and drive his golf cart inside of the building. That isn't allowed, we have to talk to him about that,but would just hate to ruin such a good mood.",
         image: "https://previews.123rf.com/images/josteinhauge/josteinhauge0602/josteinhauge060200020/320369-elderly-man-laughing.jpg",
+        email: "wicklebusket@lu.com",
         department: 5
       },
       {
         name: "Kyle",
         bio: "Kyle is one of our loudest faculty member here at LU, he's always rooting for the football teams. Calls almost everyone brother and was one of the guys body checked by Ms Kumbermelon, he as yet to live it down.",
         image: "https://www.splcenter.org/wp-content/uploads/2015/08/SPLC-Extremist-Files-Kyle-Bristow-1280x720.jpg",
+        email: "kyle@lu.com",
         department: 3
       },
       {
         name: "Nico",
         bio: "Everyone loves Nico he's always about just attacking people with hugs. Its almost scary since he is almost 7 foot tall and charges people full force then squeezes them and runs away.",
         image: "https://sportsposterwarehouse.com/cdn/shop/products/stonecoldsteveaustin99pf-1_large.jpg?v=1496332403",
+        email: "niconico@lu.com",
         department: 4
       }
     ]
     await prisma.faculty.createMany({ data: faculty })
   }
   
-
-
   const createDepartments = async () => {
     const departments = [
       {
