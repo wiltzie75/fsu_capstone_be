@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient;
 
 const seed = async () => {
-  const createFaculty = () => {
+  const createFaculty = async () => {
     const faculty = [
       { 
         name: "Dr ChuckleBerry",
@@ -72,8 +72,8 @@ const seed = async () => {
         image: "https://sportsposterwarehouse.com/cdn/shop/products/stonecoldsteveaustin99pf-1_large.jpg?v=1496332403",
         department: 4
       }
-      
     ]
+    await prisma.faculty.createMany({ data: faculty })
   }
   
 }
