@@ -121,8 +121,8 @@ const seed = async () => {
     await prisma.department.createMany({ data: departments });
   };
 
-  await createDepartments();
   await createFaculty();
+  await createDepartments();
 };
 
 
