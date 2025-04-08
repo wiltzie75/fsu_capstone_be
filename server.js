@@ -135,7 +135,11 @@ app.delete("/api/departments/:id", async (req, res, next) => {
     console.log('DELETE request received for ID:', req.params.id);
     try {
         const id = +req.params.id;
-
+        
+        await prisma.faculty.deleteMany({
+            where: { departmentId: id },
+        });
+        
         const departmentExists = await prisma.department.findUnique({
             where: { id },
         });
@@ -146,10 +150,14 @@ app.delete("/api/departments/:id", async (req, res, next) => {
                 message: `Department with id ${id} does not exist.`,
             });
         }
+
+        // Delete the department
         await prisma.department.delete({ where: { id } });
+
+        // Send 204 No Content status if deletion is successful
         res.sendStatus(204);
     } catch (err) {
-        next(err)
+        next(err);  // Pass error to error handler
     }
 });
 
