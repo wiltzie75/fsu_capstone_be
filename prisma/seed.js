@@ -61,13 +61,13 @@ const seed = async () => {
         department: 5
       },
       {
-        name: Kyle,
+        name: "Kyle",
         bio: "Kyle is one of our loudest faculty member here at LU, he's always rooting for the football teams. Calls almost everyone brother and was one of the guys body checked by Ms Kumbermelon, he as yet to live it down.",
         image: "https://www.splcenter.org/wp-content/uploads/2015/08/SPLC-Extremist-Files-Kyle-Bristow-1280x720.jpg",
         department: 3
       },
       {
-        name: Nico,
+        name: "Nico",
         bio: "Everyone loves Nico he's always about just attacking people with hugs. Its almost scary since he is almost 7 foot tall and charges people full force then squeezes them and runs away.",
         image: "https://sportsposterwarehouse.com/cdn/shop/products/stonecoldsteveaustin99pf-1_large.jpg?v=1496332403",
         department: 4
