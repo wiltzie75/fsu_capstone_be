@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient;
+  
 module.exports = prisma;
 
 const seed = async () => {
@@ -128,3 +129,4 @@ seed()
     await prisma.$disconnect();
     process.exit(1);
   });
+
