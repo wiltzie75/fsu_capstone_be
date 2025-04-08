@@ -15,47 +15,89 @@ app.get("/api/departments", async (req,res, next) => {
     }
 });
 
-app.post("/api/departments/:id/")
-
-app.put("/api/departments/:id", async (req, res, next) => {
+app.get("/api/departments/:id", async (req, res, next) => {
     try {
         const id = +req.params.id;
+        const department = await prisma.department.findUnique({ where: { id } });
 
-        const departmentExists = await prisma.departments.findUnique({ where: { id } });
-        if (!departmentExists) {
-            return next({
+        if (!department) {
+            return next ({
                 status: 404,
-                message: `Could not find department with ${id}. `,
+                message: `Could not find a department with id ${id}.`,
+            });
+        }
+        res.json(department);
+    } catch {
+        next();
+    }   
+});
+
+app.post("/api/departments", async ( req, res, next ) => {
+    try {
+        const { name, description, image, email, facultyIds } = req.body;
+        if (!name || !description || !image || !email || !facultyIds ) {
+            return next( {
+                status: 400,
+                message: "All department fields are required.",
             });
         }
 
-        const { name, description, image, email, faculty } = req.body;
-        if (!name || !description || !image || !email || !faculty) {
-            return next({
-                status: 400,
-                message: "Department must have info."
-            });
+        const department = await prisma.department.create({ data: {
+            name,
+            description,
+            image,
+            email,
+            faculty: {
+                connect: facultyIds.map(id => ({ id }))
+            }
         }
+        });
+        res.status(201).json(department);
     } catch (err) {
-        
+        next();
     }
-})
-app.delete("/api/departments/:departmentId", async (req, res, next) => {
+});
+
+// app.put("/api/departments/:id", async (req, res, next) => {
+//     try {
+//         const id = +req.params.id;
+
+//         const departmentExists = await prisma.departments.findUnique({ where: { id } });
+//         if (!departmentExists) {
+//             return next({
+//                 status: 404,
+//                 message: `Could not find department with ${id}. `,
+//             });
+//         }
+
+//         const { name, description, image, email, faculty } = req.body;
+//         if (!name || !description || !image || !email || !faculty) {
+//             return next({
+//                 status: 400,
+//                 message: "Department must have info."
+//             });
+//         }
+//     } catch (err) {
+        
+//     }
+// })
+
+app.delete("/api/departments/:id", async (req, res, next) => {
+    console.log('DELETE request received for ID:', req.params.id);
     try {
         const id = +req.params.id;
-        const departmentId = +req.params.departmentId;
 
-        const departmentExists = await prisma.department.findFirst({
-            where: { id, departmentId },
+        const departmentExists = await prisma.department.findUnique({
+            where: { id },
         });
 
         if (!departmentExists) {
             return next({
                 status: 404,
-                message: `${departmentId} department does not exist.`,
+                message: `Department with id ${id} does not exist.`,
             });
         }
-        await prisma.department.delete({ where: { id, departmentId } });
+        await prisma.department.delete({ where: { id } });
         res.sendStatus(204);
     } catch (err) {
         next();
