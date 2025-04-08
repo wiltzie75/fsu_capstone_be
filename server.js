@@ -45,9 +45,10 @@ app.post("/api/faculty", (req, res, next) => {
                 const err = new Error("missing info or wrong format")
                 throw err
             }
-        }catch(err){
+        } catch(err){
         next(err)
-}});
+    }
+});
 
 
 
@@ -63,7 +64,17 @@ app.delete("/api/faculty/:id", (req, res, next) => {
 
 
 // ===================DEPARTMENTS===========================
+// GET departments
+app.get("/api/departments", async (req, res, next) => {
+    try {
+        const department = await prisma.department.findMany();
+        res.send(department);
+    } catch (err) {
+        next(err);
+    }
+})
 
+// GET individual department
 app.get("/api/departments/:id", async (req, res, next) => {
     try {
         const id = +req.params.id;
@@ -76,11 +87,12 @@ app.get("/api/departments/:id", async (req, res, next) => {
             });
         }
         res.json(department);
-    } catch {
-        next();
+    } catch (err) {
+        next(err);
     }   
 });
 
+// CREATE department
 app.post("/api/departments", async ( req, res, next ) => {
     try {
         const { name, description, image, email, facultyIds } = req.body;
@@ -103,36 +115,66 @@ app.post("/api/departments", async ( req, res, next ) => {
         });
         res.status(201).json(department);
     } catch (err) {
-        next();
+        next(err);
     }
 });
 
-// app.put("/api/departments/:id", async (req, res, next) => {
-//     try {
-//         const id = +req.params.id;
 
-//         const departmentExists = await prisma.departments.findUnique({ where: { id } });
-//         if (!departmentExists) {
-//             return next({
-//                 status: 404,
-//                 message: `Could not find department with ${id}. `,
-//             });
-//         }
+// UPDATE department
+app.put("/api/departments/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id;
 
-//         const { name, description, image, email, faculty } = req.body;
-//         if (!name || !description || !image || !email || !faculty) {
-//             return next({
-//                 status: 400,
-//                 message: "Department must have info."
-//             });
-//         }
-//     } catch (err) {
-        
-//     }
-// })
+        const departmentExists = await prisma.department.findUnique({ where: { id } });
+        if (!departmentExists) {
+            return next({
+                status: 404,
+                message: `Department with ID ${id} not found.`,
+            });
+        }
 
+        const { name, description, image, email, facultyIds } = req.body;
+
+        if (!name || !description || !image || !email || !facultyIds) {
+            return next({
+                status: 400,
+                message: "All department fields are required."
+            });
+        }
+
+        await prisma.faculty.updateMany({
+            where: {
+                id: {
+                    in: facultyIds
+                }
+            },
+            data: {
+                departmentId: id
+            }
+        });
+
+        const updatedDepartment = await prisma.department.update({
+            where: { id },
+            data: {
+                name,
+                description,
+                image,
+                email
+            },
+            include: {
+                faculty: true
+            }
+        });
+
+        res.json(updatedDepartment);
+    } catch (err) {
+        console.error("Error in PUT /api/departments/:id:", err);
+        next(err);
+    }
+});
+
+// DELETE department
 app.delete("/api/departments/:id", async (req, res, next) => {
-    console.log('DELETE request received for ID:', req.params.id);
     try {
         const id = +req.params.id;
         
@@ -159,10 +201,15 @@ app.delete("/api/departments/:id", async (req, res, next) => {
     }
 });
 
+// Error-handling middleware
+app.use((err, req, res, next) => {
+    console.error("Error:", err);
 
+    const status = err.status || 500;
+    const message = err.message || "Internal Server Error";
 
-
-
+    res.status(status).json({ error: message });
+});
 
 app.listen(3000)
 
