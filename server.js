@@ -151,13 +151,11 @@ app.delete("/api/departments/:id", async (req, res, next) => {
             });
         }
 
-        // Delete the department
         await prisma.department.delete({ where: { id } });
 
-        // Send 204 No Content status if deletion is successful
         res.sendStatus(204);
     } catch (err) {
-        next(err);  // Pass error to error handler
+        next(err);
     }
 });
 
