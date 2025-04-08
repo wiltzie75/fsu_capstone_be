@@ -6,14 +6,56 @@ app.use(cors({ origin: /localhost/ }));
 app.use(express.json());
 app.use(require("morgan")("dev"));
 
-app.get("/api/departments", async (req,res, next) => {
+// get all faculty
+app.get("/api/faculty", async (req, res, next) => {
     try {
-        const departments = await prisma.department.findMany();
-        res.json(departments);
+        const faculty = await prisma.faculty.findMany();
+        res.send(faculty)
     } catch (err) {
-        next();
+        next(err)
     }
+})
+
+// get single faculty
+app.get("/api/faculty/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id
+        const faculty = await prisma.faculty.findUnique( {where: {id}})
+        if (!faculty) {
+            const err = new Error("can not find faculty with that id")
+            throw err
+        }
+            
+        res.send(faculty)
+    } catch (err) {
+        next(err)
+    }
+})
+
+// create faculty
+app.post("/api/faculty", (req, res, next) => {
+    try {
+        const { name, bio, image, email, departmentId} = req.body
+        const faculty = prisma.faculty.create({ 
+            data: {
+                name, bio, image, email, departmentId
+            }})
+            res.sendStatus(200).json(faculty)
+            if(!faculty) {
+                const err = new Error("missing info or wrong format")
+                throw err
+            }
 });
+      
+app.delete("/api/faculty/:id", (req, res, next) => {
+    try {
+        const id = +req.params.id
+        const faculty = prisma.faculty.delete({where: {id}})
+        res.send("goodbye forever :(").sendStatus(204)
+    } catch (err) {
+        err.next
+    }
+})
 
 app.get("/api/departments/:id", async (req, res, next) => {
     try {
@@ -100,19 +142,13 @@ app.delete("/api/departments/:id", async (req, res, next) => {
         await prisma.department.delete({ where: { id } });
         res.sendStatus(204);
     } catch (err) {
-        next();
+        next(err)
     }
 });
 
 
-app.get("/api/faculty", async (req, res, next) => {
-    try {
-        const faculty = await prisma.faculty.findMany();
-        res.send(faculty)
-    } catch (error) {
-        next(error)
-    }
-})
+
+
 
 
 app.listen(3000)
