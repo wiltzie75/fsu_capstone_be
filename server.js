@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express();
 const cors = require("cors");
-const prisma = require("./prisma/seed.js");
+const prisma = require("./prisma");
 app.use(cors({ origin: /localhost/ }));
 app.use(express.json());
 app.use(require("morgan")("dev"));
@@ -45,8 +45,12 @@ app.post("/api/faculty", (req, res, next) => {
                 const err = new Error("missing info or wrong format")
                 throw err
             }
-});
-      
+        }catch(err){
+        next(err)
+}});
+
+
+
 app.delete("/api/faculty/:id", (req, res, next) => {
     try {
         const id = +req.params.id
