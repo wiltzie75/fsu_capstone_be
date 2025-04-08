@@ -35,16 +35,18 @@ app.get("/api/faculty/:id", async (req, res, next) => {
 // create faculty
 app.post("/api/faculty", (req, res, next) => {
     try {
-        const { name, bio, image, email, departmentId} = req.body
+        const { name, bio, image, email, departmentId } = req.body
         const faculty = prisma.faculty.create({ 
             data: {
                 name, bio, image, email, departmentId
             }})
-            res.sendStatus(200).json(faculty)
-            if(!faculty) {
-                const err = new Error("missing info or wrong format")
-                throw err
-            }
+            // if(!faculty) {
+            //     const err = new Error("missing info or wrong format")
+            //     throw err
+            // } else {
+            //     res.json(faculty)
+            // }
+            res.json(faculty)
         }catch(err){
         next(err)
 }});
