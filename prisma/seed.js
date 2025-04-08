@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient;
-module.exports.prisma
+module.exports = prisma;
+
 
 const seed = async () => {
 
@@ -77,7 +78,7 @@ const seed = async () => {
     await prisma.faculty.createMany({ data: faculty })
   }
   
-}
+
 
   const createDepartments = async () => {
     const departments = [
@@ -122,7 +123,6 @@ const seed = async () => {
 
   await createDepartments();
   await createFaculty();
-  
 };
 
 
