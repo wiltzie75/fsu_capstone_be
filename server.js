@@ -57,6 +57,9 @@ app.delete("/api/faculty/:id", (req, res, next) => {
     }
 })
 
+
+// ===================DEPARTMENTS===========================
+
 app.get("/api/departments/:id", async (req, res, next) => {
     try {
         const id = +req.params.id;
