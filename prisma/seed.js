@@ -77,7 +77,7 @@ const seed = async () => {
     await prisma.faculty.createMany({ data: faculty })
   }
   
-}
+
 
   const createDepartments = async () => {
     const departments = [
@@ -121,6 +121,7 @@ const seed = async () => {
   };
 
   await createDepartments();
+
 };
 
 
