@@ -2,9 +2,12 @@ const express = require("express")
 const app = express();
 const cors = require("cors");
 const prisma = require("../prisma");
-app.use(cors({ origin: /localhost/ }));
 app.use(express.json());
 app.use(require("morgan")("dev"));
+
+
+app.use(cors({ origin: "http://localhost:3000" }));
+
 
 // get all faculty
 app.get("/api/faculty", async (req, res, next) => {
