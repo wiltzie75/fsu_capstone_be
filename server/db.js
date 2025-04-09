@@ -226,18 +226,45 @@ app.delete("/api/departments/:id", async (req, res, next) => {
 //===================LOGIN CRUD====================
 
 // get user by id
-app.get("/api/user/:id", async (req, res, send) => {
+app.get("/api/user/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
         const user = await prisma.user.findUnique({ where: {id} })
         res.json(user)
     } catch (error) {
-        
+        next(error)
     }
 })
 
+// create user
+app.post("/api/user", async (req, res, next) => {
+    try {
+        const { firstname, lastname, email, password, isAdmin } = req.body
+        if( !firstname || !lastname || !email || !password ) {
+            return next({
+                status: 400,
+                message: "All department fields are required."
+            });
+        }
+        const user = await prisma.user.create({data: {
+            firstname, lastname, email, password, isAdmin
+        }})
+        res.sendStatus(200).json(user)
+    } catch (error) {
+        next(error)
+    }
+})
 
-
+// delete user
+app.delete("/api/user/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id;
+        await prisma.user.delete({ where: {id} })
+        res.sendStatus(204)
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 //========== Error-handling middleware===============
