@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express();
 const cors = require("cors");
-const prisma = require("./prisma");
+const prisma = require("../prisma");
 app.use(cors({ origin: /localhost/ }));
 app.use(express.json());
 app.use(require("morgan")("dev"));
