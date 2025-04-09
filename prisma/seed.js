@@ -114,8 +114,36 @@ const seed = async () => {
     await prisma.department.createMany({ data: departments });
   };
 
+  const createUser = async () => {
+    const users = [
+      {
+        firstName: "Ferris",
+        lastName: "Bueller",
+        email: "ferris_b@lu.com",
+        password: "password",
+        isAdmin: true
+      },
+      {
+        firstName: "Eric",
+        lastName: "Cartman",
+        email: "eric_c@lu.com",
+        password: "password",
+        isAdmin: false
+      },
+      {
+        firstName: "Mary",
+        lastName: "Poppins",
+        email: "mary_p@lu.com",
+        password: "password",
+        isAdmin: true
+      }
+    ];
+    await prisma.user.createMany({ data: users});
+  }
+
   await createDepartments();
   await createFaculty();
+  await createUser();
 };
 
 
