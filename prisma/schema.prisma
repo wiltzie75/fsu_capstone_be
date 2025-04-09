@@ -31,3 +31,12 @@ model Faculty {
   department Department @relation(fields: [departmentId], references: [id])
   departmentId Int
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  email String
+  password String
+  isAdmin Boolean @default(false)
+}
