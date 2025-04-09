@@ -237,7 +237,7 @@ app.get("/api/user/:id", async (req, res, next) => {
 })
 
 // create user
-app.get("/api/user", async (req, res, next) => {
+app.post("/api/user", async (req, res, next) => {
     try {
         const { firstname, lastname, email, password, isAdmin } = req.body
         if( !firstname || !lastname || !email || !password ) {
@@ -254,6 +254,9 @@ app.get("/api/user", async (req, res, next) => {
         next(error)
     }
 })
+
+// delete user
+app.
 
 
 //========== Error-handling middleware===============
