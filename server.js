@@ -32,32 +32,36 @@ app.get("/api/faculty/:id", async (req, res, next) => {
 })
 
 // create faculty
-app.post("/api/faculty", (req, res, next) => {
+app.post("/api/faculty", async (req, res, next) => {
     try {
-        const { name, bio, image, email, departmentId} = req.body
-        const faculty = prisma.faculty.create({ 
+        const { name, bio, image, email, departmentId } = req.body
+        const faculty = await prisma.faculty.create({ 
             data: {
                 name, bio, image, email, departmentId
             }})
-            res.sendStatus(200).json(faculty)
-            if(!faculty) {
-                const err = new Error("Missing info or wrong format.")
-                throw err
-            }
+            // if(!faculty) {
+            //     const err = new Error("missing info or wrong format")
+            //     throw err
+            // } else {
+            //     res.json(faculty)
+            // }
+            res.json(faculty)
         } catch(err){
         next(err)
     }
 });
 
-app.delete("/api/faculty/:id", (req, res, next) => {
+app.delete("/api/faculty/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
         const faculty = prisma.faculty.delete({where: {id}})
-        res.send("Goodbye forever :(").sendStatus(204)
+        res.send("goodbye forever :(").sendStatus(204)
     } catch (err) {
         err.next
     }
 })
+
+
 
 
 // ===================DEPARTMENTS===========================
