@@ -22,10 +22,9 @@ app.get("/api/faculty/:id", async (req, res, next) => {
         const id = +req.params.id
         const faculty = await prisma.faculty.findUnique( {where: {id}})
         if (!faculty) {
-            const err = new Error("can not find faculty with that id")
+            const err = new Error("Can not find faculty with that id.")
             throw err
-        }
-            
+        }  
         res.send(faculty)
     } catch (err) {
         next(err)
@@ -42,7 +41,7 @@ app.post("/api/faculty", (req, res, next) => {
             }})
             res.sendStatus(200).json(faculty)
             if(!faculty) {
-                const err = new Error("missing info or wrong format")
+                const err = new Error("Missing info or wrong format.")
                 throw err
             }
         } catch(err){
@@ -50,13 +49,11 @@ app.post("/api/faculty", (req, res, next) => {
     }
 });
 
-
-
 app.delete("/api/faculty/:id", (req, res, next) => {
     try {
         const id = +req.params.id
         const faculty = prisma.faculty.delete({where: {id}})
-        res.send("goodbye forever :(").sendStatus(204)
+        res.send("Goodbye forever :(").sendStatus(204)
     } catch (err) {
         err.next
     }
@@ -118,7 +115,6 @@ app.post("/api/departments", async ( req, res, next ) => {
         next(err);
     }
 });
-
 
 // UPDATE department
 app.put("/api/departments/:id", async (req, res, next) => {
