@@ -59,7 +59,7 @@ app.post("/api/faculty", async (req, res, next) => {
 app.delete("/api/faculty/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
-        const faculty = prisma.faculty.delete({where: {id}})
+        const faculty = await prisma.faculty.delete({where: {id}})
         res.send("goodbye forever :(").sendStatus(204)
     } catch (err) {
         err.next
@@ -239,15 +239,16 @@ app.get("/api/user/:id", async (req, res, next) => {
 // create user
 app.post("/api/user", async (req, res, next) => {
     try {
-        const { firstname, lastname, email, password, isAdmin } = req.body
-        if( !firstname || !lastname || !email || !password ) {
+        const { firstName, lastName, email, password, isAdmin } = req.body
+        console.log("info got", firstName, lastName, email, password, isAdmin )
+        if( !firstName || !lastName || !email || !password ) {
             return next({
                 status: 400,
                 message: "All department fields are required."
             });
         }
         const user = await prisma.user.create({data: {
-            firstname, lastname, email, password, isAdmin
+            firstName, lastName, email, password, isAdmin
         }})
         res.sendStatus(200).json(user)
     } catch (error) {
@@ -270,11 +271,12 @@ app.delete("/api/user/:id", async (req, res, next) => {
 app.put("/api/user/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
-        const { firstname, lastname, email, password, isAdmin } = req.body
-        const user = prisma.user.update({
+        const { firstName, lastName, email, password, isAdmin } = req.body
+        console.log("info here => ", firstName, lastName, email, password, isAdmin)
+        const user = await prisma.user.update({
             where: {id},
             data: {
-                firstname, lastname, email, password, isAdmin
+                firstName, lastName, email, password, isAdmin
             }
         })
         res.json(user)
