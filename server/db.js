@@ -266,6 +266,22 @@ app.delete("/api/user/:id", async (req, res, next) => {
     }
 })
 
+// update user info
+app.put("/api/user/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id
+        const { firstname, lastname, email, password, isAdmin } = req.body
+        const user = prisma.user.update({
+            where: {id},
+            data: {
+                firstname, lastname, email, password, isAdmin
+            }
+        })
+        res.json(user)
+    } catch (error) {
+        next(error)
+    }
+})
 
 //========== Error-handling middleware===============
 app.use((err, req, res, next) => {
