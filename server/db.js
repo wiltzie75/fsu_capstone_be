@@ -256,7 +256,15 @@ app.post("/api/user", async (req, res, next) => {
 })
 
 // delete user
-app.
+app.delete("/api/user/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id;
+        await prisma.user.delete({ where: {id} })
+        res.sendStatus(204)
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 //========== Error-handling middleware===============
