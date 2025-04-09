@@ -13,7 +13,7 @@ app.use(cors({ origin: "http://localhost:3000" }));
 app.get("/api/faculty", async (req, res, next) => {
     try {
         const faculty = await prisma.faculty.findMany();
-        res.send(faculty)
+        res.json(faculty)
     } catch (err) {
         next(err)
     }
@@ -28,7 +28,7 @@ app.get("/api/faculty/:id", async (req, res, next) => {
             const err = new Error("Can not find faculty with that id.")
             throw err
         }  
-        res.send(faculty)
+        res.json(faculty)
     } catch (err) {
         next(err)
     }
@@ -221,7 +221,26 @@ app.delete("/api/departments/:id", async (req, res, next) => {
     }
 });
 
-// Error-handling middleware
+
+
+//===================LOGIN CRUD====================
+
+// get user by id
+app.get("/api/user/:id", async (req, res, send) => {
+    try {
+        const id = +req.params.id
+        const user = await prisma.user.findUnique({ where: {id} })
+        res.json(user)
+    } catch (error) {
+        
+    }
+})
+
+
+
+
+
+//========== Error-handling middleware===============
 app.use((err, req, res, next) => {
     console.error("Error:", err);
 
@@ -231,7 +250,5 @@ app.use((err, req, res, next) => {
     res.status(status).json({ error: message });
 });
 
+//================listen port 3000=================
 app.listen(3000)
-
-//===================LOGIN CRUD====================
-
