@@ -53,7 +53,7 @@ app.post("/api/faculty", async (req, res, next) => {
 });
 
 
-
+// delete faculty 
 app.delete("/api/faculty/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
@@ -64,7 +64,22 @@ app.delete("/api/faculty/:id", async (req, res, next) => {
     }
 })
 
-
+// update faculty
+app.put("/api/faculty/:id", async (req, res, next) => {
+    try {
+        const id = +req.params.id
+        console.log("got id =>", id)
+        const { name, bio, image, email, departmentId } = req.body
+        console.log("got info => ", {name, bio, image, email, departmentId} )
+        const faculty = await prisma.faculty.update({
+            where: {id},
+            data: { name, bio, image, email, departmentId }
+        })
+        res.json(faculty)
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 // ===================DEPARTMENTS===========================
