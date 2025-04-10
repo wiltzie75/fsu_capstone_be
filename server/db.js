@@ -263,6 +263,7 @@ app.post('/api/auth/login/', async (req, res, next) => {
     try {
         
         const { email, password } = req.body;
+        console.log(req.body)
         const user = await prisma.user.findUnique({ where: {email} });
             if(!user || (await bcrypt.compare(password, user.password)) === false){
                 const error = Error('not authorized');
@@ -270,7 +271,8 @@ app.post('/api/auth/login/', async (req, res, next) => {
                 throw error;
             }
             const token = jwt.sign({ id: user.id }, process.env.JWT);
-        res.send(token);
+            console.log("token => ",token)
+        res.json({token});
     } catch (err) {
         next(err);
     }    
