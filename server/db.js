@@ -2,12 +2,13 @@ const express = require("express")
 const app = express();
 const cors = require("cors");
 const prisma = require("../prisma");
+const uuid = require('uuid');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const JWT = process.env.JWT;
 app.use(express.json());
 app.use(require("morgan")("dev"));
-
-
-app.use(cors({ origin: "http://localhost:3000" }));
-
+app.use(cors({ origin: /localhost/ }));
 
 // get all faculty
 app.get("/api/faculty", async (req, res, next) => {
@@ -42,12 +43,7 @@ app.post("/api/faculty", async (req, res, next) => {
             data: {
                 name, bio, image, email, departmentId
             }})
-            // if(!faculty) {
-            //     const err = new Error("missing info or wrong format")
-            //     throw err
-            // } else {
-            //     res.json(faculty)
-            // }
+
             res.json(faculty)
         } catch(err){
         next(err)
@@ -55,7 +51,6 @@ app.post("/api/faculty", async (req, res, next) => {
 });
 
 // delete faculty 
-
 app.delete("/api/faculty/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
@@ -222,7 +217,6 @@ app.delete("/api/departments/:id", async (req, res, next) => {
 });
 
 
-
 //===================LOGIN CRUD====================
 
 // get user by id
@@ -240,20 +234,46 @@ app.get("/api/user/:id", async (req, res, next) => {
 app.post("/api/user", async (req, res, next) => {
     try {
         const { firstName, lastName, email, password, isAdmin } = req.body
-        console.log("info got", firstName, lastName, email, password, isAdmin )
+
         if( !firstName || !lastName || !email || !password ) {
             return next({
                 status: 400,
                 message: "All department fields are required."
             });
         }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const user = await prisma.user.create({data: {
-            firstName, lastName, email, password, isAdmin
+            firstName, 
+            lastName, 
+            email, 
+            password: hashedPassword, 
+            isAdmin
         }})
+
         res.sendStatus(200).json(user)
     } catch (error) {
         next(error)
     }
+})
+
+app.post('/api/auth/login', async (req, res, next) => {
+    try {
+        const authenticate = async({ email, password }) => {
+            const response = await prisma.user.findUnique({ where: {id} });
+            if(!responsw.rows.length || (await bcrypt.compare(password, response.rows[0].password)) === false){
+                const error = Error('not authorized');
+                error.status = 401;
+                throw error;
+            }
+            const token = await jwt.sign({ id: response.rows[0].id}, JWT);
+            return {token};
+        }
+        res.send(await authenticate(req.body));
+    } catch (err) {
+        next(err);
+    }    
 })
 
 // delete user
@@ -272,11 +292,15 @@ app.put("/api/user/:id", async (req, res, next) => {
     try {
         const id = +req.params.id
         const { firstName, lastName, email, password, isAdmin } = req.body
-        console.log("info here => ", firstName, lastName, email, password, isAdmin)
+
         const user = await prisma.user.update({
             where: {id},
             data: {
-                firstName, lastName, email, password, isAdmin
+                firstName, 
+                lastName, 
+                email, 
+                password, 
+                isAdmin
             }
         })
         res.json(user)
