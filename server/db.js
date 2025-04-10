@@ -8,7 +8,10 @@ const jwt = require('jsonwebtoken');
 const JWT = process.env.JWT;
 app.use(express.json());
 app.use(require("morgan")("dev"));
-app.use(cors({ origin: "http://localhost/" }));
+
+
+
+app.use(cors({ origin: "*" }));
 
 // get all faculty
 app.get("/api/faculty", async (req, res, next) => {
