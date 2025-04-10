@@ -6,7 +6,7 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 
 app.use(cors({ 
-    origin: "http://localhost:3000" 
+    origin: "http://localhost/" 
 }));
 
 
