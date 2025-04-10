@@ -258,19 +258,18 @@ app.post("/api/user", async (req, res, next) => {
     }
 })
 
-app.post('/api/auth/login', async (req, res, next) => {
+app.post('/api/auth/login/', async (req, res, next) => {
     try {
-        const authenticate = async({ email, password }) => {
-            const response = await prisma.user.findUnique({ where: {id} });
-            if(!responsw.rows.length || (await bcrypt.compare(password, response.rows[0].password)) === false){
+        
+        const { email, password } = req.body;
+        const user = await prisma.user.findUnique({ where: {email} });
+            if(!user || (await bcrypt.compare(password, user.password)) === false){
                 const error = Error('not authorized');
                 error.status = 401;
                 throw error;
             }
-            const token = await jwt.sign({ id: response.rows[0].id}, JWT);
-            return {token};
-        }
-        res.send(await authenticate(req.body));
+            const token = jwt.sign({ id: user.id }, process.env.JWT);
+        res.send(token);
     } catch (err) {
         next(err);
     }    
