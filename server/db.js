@@ -95,7 +95,11 @@ app.get("/api/departments", async (req, res, next) => {
 app.get("/api/departments/:id", async (req, res, next) => {
     try {
         const id = +req.params.id;
-        const department = await prisma.department.findUnique({ where: { id } });
+        const department = await prisma.department.findUnique({ where: { id: Number(id) },
+            include: {
+                faculty: true,
+            },
+        });
 
         if (!department) {
             return next ({
