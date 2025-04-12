@@ -241,11 +241,13 @@ app.post("/api/user", async (req, res, next) => {
         const { firstName, lastName, email, password, isAdmin } = req.body
 
         if( !firstName || !lastName || !email || !password ) {
-            return next({
-                status: 400,
-                message: "All department fields are required."
-            });
+            return res.json({error: "All department fields are required."});
         }
+
+        if(!email.includes(".com")) return res.json({error: "email must be an email silly"})
+
+        const existingUser = await prisma.user.findUnique({where: {email}})
+        if(existingUser) return res.json({error: "email already in use"})
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -257,7 +259,15 @@ app.post("/api/user", async (req, res, next) => {
             isAdmin
         }})
 
-        res.sendStatus(200).json(user)
+        // let token = null
+        // if(user) {
+        const token = jwt.sign({ id: user.id}, process.env.JWT)
+        // }
+
+        res.json({
+            message: "account created",
+            token: token
+        })
     } catch (error) {
         next(error)
     }
@@ -265,17 +275,15 @@ app.post("/api/user", async (req, res, next) => {
 
 app.post('/api/auth/login/', async (req, res, next) => {
     try {
-        
         const { email, password } = req.body;
-        console.log(req.body)
         const user = await prisma.user.findUnique({ where: {email} });
-            if(!user || (await bcrypt.compare(password, user.password)) === false){
-                const error = Error('not authorized');
-                error.status = 401;
-                throw error;
-            }
-            const token = jwt.sign({ id: user.id }, process.env.JWT);
-            console.log("token => ",token)
+        if(!user) return res.json({error: "no user found"})
+        
+        const passwordCheck = await bcrypt.compare(password, user.password)
+        if(!passwordCheck) return res.json({error: "incorrect password :("})
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT);
+
         res.json({token});
     } catch (err) {
         next(err);
