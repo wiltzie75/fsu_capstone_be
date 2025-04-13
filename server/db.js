@@ -216,7 +216,7 @@ app.delete("/api/departments/:id", async (req, res, next) => {
 
         await prisma.department.delete({ where: { id } });
 
-        res.sendStatus(204);
+        res.sendStatus(200);
     } catch (err) {
         next(err);
     }
@@ -296,7 +296,7 @@ app.delete("/api/user/:id", async (req, res, next) => {
     try {
         const id = +req.params.id;
         await prisma.user.delete({ where: {id} })
-        res.sendStatus(204)
+        res.sendStatus(200)
     } catch (error) {
         next(error)
     }
