@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const JWT = process.env.JWT;
+const verifyToken = require('./verify')
 app.use(express.json());
 app.use(require("morgan")("dev"));
 
@@ -225,11 +226,11 @@ app.delete("/api/departments/:id", async (req, res, next) => {
 //===================LOGIN CRUD====================
 
 // get user by id
-app.get("/api/user/:id", async (req, res, next) => {
+app.get("/api/user", verifyToken, async (req, res, next) => {
     try {
-        const id = +req.params.id
+        const id = req.userId
         const user = await prisma.user.findUnique({ where: {id} })
-        res.json(user)
+        res.json({user})
     } catch (error) {
         next(error)
     }
@@ -302,9 +303,8 @@ app.delete("/api/user/:id", async (req, res, next) => {
 })
 
 // update user info
-app.put("/api/user/:id", async (req, res, next) => {
+app.get("/api/user", async (req, res, next) => {
     try {
-        const id = +req.params.id
         const { firstName, lastName, email, password, isAdmin } = req.body
 
         const user = await prisma.user.update({
